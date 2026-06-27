@@ -1,0 +1,257 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Helper function references
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email == "admin@bfgplt.com" ||
+        request.auth.token.email == "benaflash@gmail.com" ||
+        request.auth.token.email == "benaflash2026@gmail.com" ||
+        request.auth.token.email == "benaflashglobal@gmail.com" ||
+        request.auth.token.email == "benaflashglobal2026@gmail.com" ||
+        request.auth.token.email.matches('.*@bfgplt\\.com$')
+      );
+    }
+    
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Validation Blueprint for CompanyInfo
+    function isValidCompany(data) {
+      return data.name is string && data.name.size() <= 200
+        && data.tagline is string && data.tagline.size() <= 500
+        && data.aboutText is string && data.aboutText.size() <= 2000
+        && data.phone is string && data.phone.size() <= 100
+        && data.email is string && data.email.size() <= 100;
+    }
+
+    // Validation Blueprint for Project
+    function isValidProject(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.title is string && data.title.size() <= 300
+        && data.client is string && data.client.size() <= 200
+        && data.category is string && data.category.size() <= 100
+        && data.status is string && data.status.size() <= 50;
+    }
+
+    // Validation Blueprint for Certification
+    function isValidCertification(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.name is string && data.name.size() <= 300
+        && data.issuingBody is string && data.issuingBody.size() <= 300
+        && data.logoText is string && data.logoText.size() <= 100;
+    }
+
+    // Validation Blueprint for Career
+    function isValidCareer(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.title is string && data.title.size() <= 200
+        && data.jobType is string && data.jobType.size() <= 100
+        && data.status is string && data.status.size() <= 50;
+    }
+
+    // Validation Blueprint for Application
+    function isValidApplication(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.careerId is string && data.careerId.size() <= 100
+        && data.name is string && data.name.size() <= 200
+        && data.email is string && data.email.size() <= 100
+        && data.phone is string && data.phone.size() <= 100;
+    }
+
+    // Validation Blueprint for LeadQuote
+    function isValidLeadQuote(data) {
+      return data.id is string 
+        && data.name is string;
+    }
+
+    // Validation Blueprint for AdminNotification
+    function isValidNotification(data) {
+      return data.id is string 
+        && data.type is string;
+    }
+
+    // Validation Blueprint for Blog
+    function isValidBlog(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.title is string && data.title.size() <= 350
+        && data.snippet is string && data.snippet.size() <= 500
+        && data.content is string && data.content.size() <= 20000;
+    }
+
+    // Validation Blueprint for ClientLogo
+    function isValidClientLogo(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.name is string && data.name.size() <= 200;
+    }
+
+    // Validation Blueprint for ServiceInfo
+    function isValidService(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.title is string && data.title.size() <= 300
+        && data.description is string && data.description.size() <= 1500
+        && data.iconName is string && data.iconName.size() <= 100
+        && (data.bullets is list || !('bullets' in data))
+        && (!('imageUrl' in data) || data.imageUrl is string);
+    }
+
+    // Validation Blueprint for AircondRate
+    function isValidAircondRate(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.labelMs is string && data.labelMs.size() <= 300
+        && data.labelEn is string && data.labelEn.size() <= 300
+        && data.minPrice is number
+        && data.maxPrice is number
+        && (!('order' in data) || data.order is number);
+    }
+
+    // Validation Blueprint for Testimonial
+    function isValidTestimonial(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.clientName is string && data.clientName.size() <= 200
+        && (!('clientCompany' in data) || data.clientCompany is string)
+        && data.feedback is string && data.feedback.size() <= 2000
+        && data.rating is number && data.rating >= 1 && data.rating <= 5
+        && data.date is string && data.date.size() <= 100
+        && data.userId is string && data.userId.size() <= 100
+        && data.verified is bool;
+    }
+
+    // Validation Blueprint for FAQ
+    function isValidFAQ(data) {
+      return data.id is string && data.id.size() <= 100
+        && data.question is string && data.question.size() <= 1000
+        && data.answer is string && data.answer.size() <= 5000;
+    }
+
+    // Match rules for Collections
+    
+    // Admins Collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Provisioned secure side
+    }
+
+    // Company Collection
+    match /company/{companyId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidCompany(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Projects Collection
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidProject(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Certifications Collection
+    match /certifications/{certId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidCertification(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Careers Collection
+    match /careers/{careerId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidCareer(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Applications Collection
+    match /applications/{applicationId} {
+      allow read: if isAdmin();
+      allow create: if isValidApplication(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    // Leads Collection
+    match /leads/{leadId} {
+      allow read: if true;
+      allow create: if isValidLeadQuote(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    // Notifications Collection
+    match /notifications/{notificationId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isValidNotification(request.resource.data);
+    }
+
+    // Blogs Collection
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidBlog(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Client/Cooperation Logos
+    match /clientLogos/{logoId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidClientLogo(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Staff Collection
+    match /staff/{staffId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Documents Collection
+    match /documents/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Services Collection
+    match /services/{serviceId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidService(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // CalculatorRates Collection
+    match /calculatorRates/{rateId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidAircondRate(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Testimonials Collection
+    match /testimonials/{testimonialId} {
+      // Allow public to read
+      allow read: if true;
+      // Allow public to create unverified testimonials (pending approval)
+      allow create: if isValidTestimonial(request.resource.data) && request.resource.data.verified == false;
+      // Admin can update (e.g. set verified to true)
+      allow update: if isAdmin() && isValidTestimonial(request.resource.data);
+      // Admin can delete, or user can delete their own
+      allow delete: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+    }
+    // FAQs Collection
+    match /faqs/{faqId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidFAQ(request.resource.data);
+      allow delete: if isAdmin();
+    }
+  }
+}

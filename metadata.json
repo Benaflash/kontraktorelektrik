@@ -1,0 +1,6 @@
+{
+  "name": "BENA FLASH GLOBAL PLT",
+  "description": "Laman Web Korporat Kontraktor Elektrikal, HVAC, Solar PV & Sistem M&E Berdaftar G7",
+  "requestFramePermissions": ["camera", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

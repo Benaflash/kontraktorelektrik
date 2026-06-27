@@ -1,0 +1,246 @@
+{
+  "entities": {
+    "CompanyInfo": {
+      "title": "CompanyInfo",
+      "description": "Details about Bena Flash Global PLT",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "aboutText": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "ecommerceLink": { "type": "string" },
+        "experienceYears": { "type": "number" },
+        "completedProjects": { "type": "number" },
+        "customerSatisfaction": { "type": "number" },
+        "clientsCorporate": { "type": "number" },
+        "operatingStates": { "type": "number" },
+        "coreStaff": { "type": "number" }
+      },
+      "required": ["name", "tagline", "phone", "email"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Corporate execution projects",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "client": { "type": "string" },
+        "location": { "type": "string" },
+        "value": { "type": "string" },
+        "completionDate": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string" },
+        "img": { "type": "string" },
+        "imgBefore": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["id", "title", "client", "category", "status"]
+    },
+    "Certification": {
+      "title": "Certification",
+      "description": "Professional registrations and licenses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "issuingBody": { "type": "string" },
+        "logoText": { "type": "string" },
+        "description": { "type": "string" },
+        "registrationNo": { "type": "string" },
+        "validity": { "type": "string" },
+        "specialties": { "type": "array" }
+      },
+      "required": ["id", "name", "issuingBody", "logoText"]
+    },
+    "Career": {
+      "title": "Career",
+      "description": "Job openings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "department": { "type": "string" },
+        "location": { "type": "string" },
+        "jobType": { "type": "string" },
+        "salary": { "type": "string" },
+        "requirements": { "type": "array" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "title", "jobType", "status"]
+    },
+    "Application": {
+      "title": "Application",
+      "description": "Job applications submitted by candidates",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "careerId": { "type": "string" },
+        "careerTitle": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "resumeUrl": { "type": "string" },
+        "experienceSummary": { "type": "string" }
+      },
+      "required": ["id", "careerId", "name", "email", "phone"]
+    },
+    "LeadQuote": {
+      "title": "LeadQuote",
+      "description": "Customer leads and quotation requests",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "name": { "type": "string" },
+        "companyName": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "serviceType": { "type": "string" },
+        "location": { "type": "string" },
+        "budget": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "name", "phone", "email", "status"]
+    },
+    "Blog": {
+      "title": "Blog",
+      "description": "Industry news and technical articles",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "snippet": { "type": "string" },
+        "content": { "type": "string" },
+        "date": { "type": "string" },
+        "readTime": { "type": "string" },
+        "author": { "type": "string" },
+        "img": { "type": "string" }
+      },
+      "required": ["id", "title", "snippet", "content"]
+    },
+    "ClientLogo": {
+      "title": "ClientLogo",
+      "description": "Client or corporate partner logo details for the homepage integration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "logoUrl": { "type": "string" }
+      },
+      "required": ["id", "name"]
+    },
+    "ServiceInfo": {
+      "title": "ServiceInfo",
+      "description": "Company services offered",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "iconName": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "bullets": { "type": "array" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["id", "title"]
+    },
+    "AircondRate": {
+      "title": "AircondRate",
+      "description": "Configurable aircond service rates for estimate calculator",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "labelMs": { "type": "string" },
+        "labelEn": { "type": "string" },
+        "minPrice": { "type": "number" },
+        "maxPrice": { "type": "number" },
+        "order": { "type": "number" }
+      },
+      "required": ["id", "labelMs", "labelEn", "minPrice", "maxPrice"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Client feedback and testimonials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "projectId": { "type": "string" },
+        "clientName": { "type": "string" },
+        "clientCompany": { "type": "string" },
+        "feedback": { "type": "string" },
+        "rating": { "type": "number" },
+        "date": { "type": "string" },
+        "userId": { "type": "string" },
+        "verified": { "type": "boolean" }
+      },
+      "required": ["id", "clientName", "feedback", "rating", "date", "userId", "verified"]
+    },
+    "FAQ": {
+      "title": "FAQ",
+      "description": "Frequently Asked Questions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "question": { "type": "string" },
+        "answer": { "type": "string" }
+      },
+      "required": ["id", "question", "answer"]
+    }
+  },
+  "firestore": {
+    "company": {
+      "schema": "CompanyInfo",
+      "description": "Holds the company settings document"
+    },
+    "projects": {
+      "schema": "Project",
+      "description": "List of M&E projects"
+    },
+    "certifications": {
+      "schema": "Certification",
+      "description": "List of company certifications"
+    },
+    "careers": {
+      "schema": "Career",
+      "description": "List of open positions"
+    },
+    "applications": {
+      "schema": "Application",
+      "description": "Job application submissions from prospective candidates"
+    },
+    "leads": {
+      "schema": "LeadQuote",
+      "description": "Quotation requests from clients"
+    },
+    "blogs": {
+      "schema": "Blog",
+      "description": "List of blog posts"
+    },
+    "clientLogos": {
+      "schema": "ClientLogo",
+      "description": "Client/cooperation logos shown at the main screen"
+    },
+    "services": {
+      "schema": "ServiceInfo",
+      "description": "List of services provided by the company"
+    },
+    "calculatorRates": {
+      "schema": "AircondRate",
+      "description": "Configurable aircond service rates for estimate calculator"
+    },
+    "testimonials": {
+      "schema": "Testimonial",
+      "description": "Client feedback and ratings"
+    },
+    "faqs": {
+      "schema": "FAQ",
+      "description": "Frequently Asked Questions"
+    }
+  }
+}
